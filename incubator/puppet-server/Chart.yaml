@@ -1,0 +1,13 @@
+apiVersion: v1
+description: A Puppet Server
+name: puppet-server
+version: 0.1.0
+appVersion: 5.3.4
+home: https://github.com/puppetlabs/puppet-server
+keywords:
+  - puppet
+  - puppet-server
+  - server
+maintainers:
+  - name: Ken Barber
+    email: ken@bob.sh
