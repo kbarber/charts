@@ -1,0 +1,20 @@
+{{- if .Values.persistence.enabled }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ .Release.Name }}-ssl-claim
+  namespace: {{ .Release.Namespace }}
+spec:
+{{- if .Values.persistence.ssl.storageclass }}
+  storageClassName: {{ .Values.persistence.ssl.storageclass }}
+{{- end }}
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.persistence.ssl.size }}
+{{- if .Values.persistence.ssl.pvSelector }}
+  selector:
+{{ toYaml .Values.persistence.ssl.pvSelector | indent 4 }}
+{{- end }}
+{{- end }}

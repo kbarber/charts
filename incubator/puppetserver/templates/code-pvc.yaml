@@ -1,0 +1,20 @@
+{{- if .Values.persistence.code.enabled }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ .Release.Name }}-code-claim
+  namespace: {{ .Release.Namespace }}
+spec:
+{{- if .Values.persistence.code.storageclass }}
+  storageClassName: {{ .Values.persistence.code.storageclass }}
+{{- end }}
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.persistence.code.size }}
+{{- if .Values.persistence.code.pvSelector }}
+  selector:
+{{ toYaml .Values.persistence.code.pvSelector | indent 4 }}
+{{- end }}
+{{- end }}

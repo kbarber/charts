@@ -22,11 +22,16 @@ spec:
             - chown
             - -R
             - 1000:1000
-            - /puppet
+            - /etc/puppetlabs/
           volumeMounts:
-{{- if .Values.persistence.enabled }}
-            - mountPath: /puppet/modules
-              name: {{ .Release.Name }}-volume
+{{- if .Values.persistence.code.enabled }}
+            - mountPath: /etc/puppetlabs/code
+              name: {{ .Release.Name }}-code-volume
+              readOnly: false
+{{- end }}
+{{- if .Values.persistence.ssl.enabled }}
+            - mountPath: /etc/puppetlabs/puppet/ssl
+              name: {{ .Release.Name }}-ssl-volume
               readOnly: false
 {{- end }}
       containers:
@@ -44,9 +49,14 @@ spec:
               path: /
               port: {{ .Values.service.internalPort }}
           volumeMounts:
-{{- if .Values.persistence.enabled }}
-            - mountPath: /puppet/modules
-              name: {{ .Release.Name }}-volume
+{{- if .Values.persistence.code.enabled }}
+            - mountPath: /etc/puppetlabs/code
+              name: {{ .Release.Name }}-code-volume
+              readOnly: false
+{{- end }}
+{{- if .Values.persistence.ssl.enabled }}
+            - mountPath: /etc/puppetlabs/puppet/ssl
+              name: {{ .Release.Name }}-ssl-volume
               readOnly: false
 {{- end }}
           resources:
@@ -56,8 +66,13 @@ spec:
 {{ toYaml .Values.nodeSelector | indent 8 }}
     {{- end }}
       volumes:
-{{- if .Values.persistence.enabled }}
-        - name: {{ .Release.Name }}-volume
+{{- if .Values.persistence.code.enabled }}
+        - name: {{ .Release.Name }}-code-volume
           persistentVolumeClaim:
-            claimName: {{ .Release.Name }}-claim
+            claimName: {{ .Release.Name }}-code-claim
+{{- end }}
+{{- if .Values.persistence.ssl.enabled }}
+        - name: {{ .Release.Name }}-ssl-volume
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-ssl-claim
 {{- end }}
